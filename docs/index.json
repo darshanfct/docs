@@ -5,49 +5,14 @@
   },
   "projects": [
     {
-      "id": "eagleye-radar",
+      "id": "P1.EAGLEYE RADAR",
       "title": "🦅 EAGLEYE RADAR",
       "description": "Network Discovery & Security Operations Platform",
       "docs": [
         {
-          "title": "Overview",
-          "file": "eagleye-radar/README.md",
-          "id": "overview"
-        },
-        {
-          "title": "Quick Start",
-          "file": "eagleye-radar/quick-start.md",
-          "id": "quick-start"
-        },
-        {
-          "title": "Installation",
-          "file": "eagleye-radar/installation.md",
-          "id": "installation"
-        },
-        {
-          "title": "Configuration",
-          "file": "eagleye-radar/configuration.md",
-          "id": "configuration"
-        },
-        {
-          "title": "Usage Guide",
-          "file": "eagleye-radar/usage.md",
-          "id": "usage"
-        },
-        {
-          "title": "Architecture",
-          "file": "eagleye-radar/architecture.md",
-          "id": "architecture"
-        },
-        {
-          "title": "Troubleshooting",
-          "file": "eagleye-radar/troubleshooting.md",
-          "id": "troubleshooting"
-        },
-        {
-          "title": "API Reference",
-          "file": "eagleye-radar/api-reference.md",
-          "id": "api-reference"
+          "title": "Complete Documentation",
+          "file": "P1.EAGLEYE RADAR/README.md",
+          "id": "documentation"
         }
       ]
     }
