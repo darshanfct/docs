@@ -1,62 +1,85 @@
-# docs
-Forensic CyberTech Documentation
-# Eagleye Radar Documentation Site
+# Forensic CyberTech Documentation
 
-A modern, enterprise-grade documentation website for Eagleye Radar — Network Monitoring & Analysis.
+A modern, enterprise-grade documentation website for Forensic CyberTech platforms with hierarchical project organization.
 
 ## 📁 Project Structure
 
 ```
-eagleye-docs/
-├── index.html                 # Main application
-├── 404.html                   # Error page
-├── README.md                  # This file
+docs/
+├── index.html                      # Main application
+├── 404.html                        # Error page
+├── README.md                       # This file
 │
 ├── /assets
 │   ├── /css
-│   │   └── style.css         # Complete styling (dark theme)
+│   │   └── style.css              # Complete styling (dark theme, glassmorphism)
 │   └── /js
-│       ├── app.js            # Main application logic
-│       ├── markdown.js       # Markdown rendering & processing
-│       └── search.js         # Search functionality
+│       ├── app.js                 # Main application logic (hierarchical routing)
+│       ├── markdown.js            # Markdown rendering & TOC generation
+│       └── search.js              # Full-text search functionality
 │
 └── /docs
-    ├── index.json            # Documentation index (sidebar generator)
-    ├── getting-started.md     # Introduction
-    ├── installation.md        # Installation guide
-    ├── radar-scanner.md       # Scanner documentation
-    ├── network-engine.md      # Engine documentation
-    ├── configuration.md       # Configuration guide
-    ├── api-reference.md       # API documentation
-    └── troubleshooting.md     # Troubleshooting guide
+    ├── index.json                 # Hierarchical index (projects & documents)
+    │
+    └── /eagleye-radar             # PROJECT: EAGLEYE RADAR
+        ├── README.md              # Overview & quick introduction
+        ├── quick-start.md         # 5-minute setup guide
+        ├── installation.md        # System requirements & installation methods
+        ├── configuration.md       # Configuration options & optimization
+        ├── usage.md               # Running scans & operating services
+        ├── architecture.md        # System design & data flow
+        ├── troubleshooting.md     # Common issues & solutions
+        └── api-reference.md       # REST API endpoints & examples
+```
+
+## 🏗️ Hierarchical Organization
+
+The documentation follows a project-based hierarchy:
+
+```
+Forensic CyberTech Documentations (Main Site)
+  ├── 🦅 EAGLEYE RADAR (Project 1)
+  │   ├── Overview
+  │   ├── Quick Start
+  │   ├── Installation
+  │   ├── Configuration
+  │   ├── Usage
+  │   ├── Architecture
+  │   ├── Troubleshooting
+  │   └── API Reference
+  │
+  └── [Additional Projects] (Coming Soon)
 ```
 
 ## 🚀 Features
 
+✅ **Hierarchical Projects** - Multi-project documentation support  
 ✅ **Pure Frontend** - No backend required  
 ✅ **Dynamic Markdown** - Auto-rendering of .md files  
-✅ **Auto Sidebar** - Automatically generated from index.json  
+✅ **Collapsible Sidebar** - Projects expand/collapse with state persistence  
+✅ **Base64 Routing** - Prevents URL anchor conflicts  
 ✅ **Search** - Client-side full-text search  
-✅ **Table of Contents** - Auto-generated TOC with scroll tracking  
-✅ **Syntax Highlighting** - Code blocks with Prism.js  
+✅ **Table of Contents** - Auto-generated with scroll tracking  
+✅ **Syntax Highlighting** - Code blocks via Prism.js  
 ✅ **Copy Buttons** - One-click copy for code snippets  
 ✅ **Responsive Design** - Mobile, tablet, and desktop  
 ✅ **GitHub Pages Ready** - Deploy without build tools  
-✅ **Enterprise Theme** - Dark navy theme with blue accents  
+✅ **Enterprise Theme** - Dark navy theme with blue accents (glassmorphism)  
 
 ## 🎨 Technology Stack
 
 - **HTML5** - Semantic markup
-- **CSS3** - Glassmorphism design, CSS Grid
-- **Vanilla JavaScript** - No frameworks
-- **Marked.js** - Markdown parsing (via CDN)
-- **Prism.js** - Syntax highlighting (via CDN)
+- **CSS3** - Glassmorphism, CSS Grid, CSS Variables
+- **Vanilla JavaScript** - No frameworks or build tools
+- **Marked.js** - Markdown parsing (CDN)
+- **Prism.js** - Syntax highlighting (CDN)
+- **localStorage** - Persist UI state (collapsed/expanded projects)
 
 ## 📖 How to Use
 
 ### Local Development
 
-1. **Install a local server** (required for CORS):
+1. **Start a local server** (required for file loading):
 
 ```bash
 # Using Python 3
@@ -75,256 +98,193 @@ ruby -run -ehttpd . -p8000
 http://localhost:8000
 ```
 
-3. **View documentation** - Navigate through sidebar
+3. **Navigate** - Use sidebar to explore projects and documents
 
-### Add New Documentation
+### Add a New Project
 
-1. **Create a new markdown file** in `/docs`:
+To add a new project (e.g., "My Project"), follow these steps:
+
+1. **Create a project folder** in `docs/`:
 ```bash
-# Example: create new project doc
-touch docs/my-project.md
+mkdir docs/my-project
 ```
 
-2. **Add entry to `/docs/index.json`**:
+2. **Add markdown files** to the project:
+```bash
+touch docs/my-project/README.md
+touch docs/my-project/quick-start.md
+touch docs/my-project/installation.md
+```
+
+3. **Update `/docs/index.json`** with your project:
 ```json
 {
-  "title": "My Project",
-  "file": "my-project.md"
+  "site": {
+    "title": "Forensic CyberTech Documentations",
+    "description": "Enterprise Documentation"
+  },
+  "projects": [
+    {
+      "id": "my-project",
+      "title": "📋 My Project",
+      "description": "Description of your project",
+      "docs": [
+        {
+          "title": "Overview",
+          "file": "my-project/README.md",
+          "id": "overview"
+        },
+        {
+          "title": "Quick Start",
+          "file": "my-project/quick-start.md",
+          "id": "quick-start"
+        },
+        {
+          "title": "Installation",
+          "file": "my-project/installation.md",
+          "id": "installation"
+        }
+      ]
+    }
+  ]
 }
 ```
 
-3. **Refresh browser** - New page appears in sidebar automatically
+4. **Refresh browser** - New project appears in collapsible sidebar
+
+### How the Hierarchical System Works
+
+**index.json Structure:**
+- Top level: `site.title` and `projects` array
+- Each project has: `id`, `title`, `description`, and `docs` array
+- Each doc has: `title`, `file` (path relative to `/docs`), and `id`
+
+**Routing System:**
+- Document links use base64 encoding to prevent URL hash conflicts with Table of Contents anchors
+- Example: `eagleye-radar/README.md` → `#ZWFnbGV5ZS1yYWRhci9SRUFETUUubWQ=`
+- This allows TOC headings to work as local anchors without triggering document navigation
+
+**Sidebar Behavior:**
+- Projects are collapsible/expandable
+- Expansion state is saved in browser localStorage
+- First document in first project loads by default
+- Search filters across all project documents
 
 ### Customize Styling
 
-Edit `/assets/css/style.css`:
+Edit `/assets/css/style.css` to modify:
+- Color scheme (CSS variables at top)
+- Layout dimensions (sidebar width, TOC width)
+- Typography and spacing
+- Glassmorphism effects
+- Responsive breakpoints
 
-```css
-/* Change primary color */
---color-primary: #3B82F6;  /* Blue */
+### Deploy to GitHub Pages
 
-/* Change background gradient */
-background: linear-gradient(135deg, #030B1C 0%, #071A3A 100%);
-
-/* Change text colors */
---color-text-primary: #E5E7EB;    /* Light gray */
-```
-
-## 🚢 Deploy to GitHub Pages
-
-### Step 1: Create GitHub Repository
-
+1. Push your `docs` folder to GitHub:
 ```bash
-git init
 git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR_USERNAME/eagleye-docs.git
-git branch -M main
-git push -u origin main
+git commit -m "Update documentation"
+git push origin main
 ```
 
-### Step 2: Enable GitHub Pages
+2. Enable GitHub Pages in repository settings:
+   - Source: `main` branch, `/docs` folder
+   - URL: `https://username.github.io/repo-name/docs`
 
-1. Go to repository **Settings**
-2. Navigate to **Pages** section
-3. Select source: **Deploy from branch**
-4. Select branch: **main**
-5. Select folder: **/ (root)**
-6. Click **Save**
+## 🔧 Configuration
 
-### Step 3: Access Your Site
+### CSS Variables (in style.css)
 
-Your documentation will be available at:
-```
-https://YOUR_USERNAME.github.io/eagleye-docs
-```
-
-Or with custom domain:
-```
-https://docs.eagleye.local/
-```
-
-## 🔍 Search Features
-
-- **Real-time search** - Type to filter documentation
-- **Full-text search** - Searches document content
-- **Smart ranking** - Results ranked by relevance
-- **Snippet preview** - Shows matching context
-
-**Keyboard shortcuts:**
-- `Cmd/Ctrl + K` - Focus search
-- `Escape` - Clear search
-
-## 📱 Mobile Experience
-
-The site is fully responsive:
-
-- **Mobile** - Hamburger menu sidebar
-- **Tablet** - Adjusted grid layout
-- **Desktop** - Full 3-column layout
-
-## ⚡ Performance
-
-- **Zero build time** - Deploy instantly
-- **Fast load** - <1 second initial load
-- **Minimal dependencies** - Two CDN libraries only
-- **Lazy loading** - Only visible content is processed
-- **Optimized CSS** - ~15KB gzipped
-
-## 🔒 Security
-
-- **No backend** - No server-side vulnerabilities
-- **Static files only** - Inherently secure
-- **CSP ready** - Can add Content Security Policy
-- **Update safe** - Update docs without code deployment
-
-## 🛠️ Customization
-
-### Change Logo
-
-Edit `index.html`:
-```html
-<div class="logo">⚡ YOUR COMPANY</div>
-```
-
-### Change Theme Color
-
-Edit `assets/css/style.css`:
+Modify the color scheme:
 ```css
---color-primary: #YOUR_COLOR;
---color-primary-dark: #DARKER_COLOR;
+:root {
+  --primary: #3B82F6;           /* Blue accent */
+  --bg-dark: #030B1C;           /* Dark navy */
+  --bg-light: #071A3A;          /* Lighter navy */
+  --text-light: #E0E7FF;        /* Light text */
+  --border: #1E3A5F;            /* Border color */
+}
 ```
 
-### Add Custom Fonts
+### Search Configuration
 
-Edit `index.html` head:
-```html
-<link href="https://fonts.googleapis.com/css2?family=YourFont" rel="stylesheet">
-```
-
-Then update CSS:
-```css
---font-family-primary: 'YourFont', sans-serif;
-```
-
-### Track Analytics
-
-Add to `index.html` before `</body>`:
-```html
-<script async src="https://www.googletagmanager.com/gtag/js?id=GA_ID"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'GA_ID');
-</script>
-```
-
-## 📊 Supported Markdown Features
-
-- ✅ Headings (h1-h6)
-- ✅ Bold, italic, strikethrough
-- ✅ Lists (ordered, unordered)
-- ✅ Code blocks with syntax highlighting
-- ✅ Inline code
-- ✅ Tables
-- ✅ Links
-- ✅ Images
-- ✅ Blockquotes
-- ✅ Horizontal rules
-- ✅ Line breaks
-
-**Example:**
-
-```markdown
-# Heading 1
-
-## Heading 2
-
-Here's **bold** and *italic* text.
-
-### Code Example
-\`\`\`javascript
-console.log("Hello, world!");
-\`\`\`
-
-### Table
-
-| Column 1 | Column 2 |
-|----------|----------|
-| Value 1  | Value 2  |
-
-> This is a blockquote
-
-[External Link](https://example.com)
-```
+The search functionality:
+- Indexes all markdown document content
+- Runs entirely in browser (no server needed)
+- Case-insensitive matching
+- Results show document title and preview
 
 ## 🐛 Troubleshooting
 
-### Content not loading
+**404 Errors when clicking TOC items:**
+- Fixed! TOC links now use local anchors instead of document routing
+- Base64 encoding prevents hash collision
 
-**Check:**
-1. Is the local server running? (`python -m http.server 8000`)
-2. Are markdown files in `/docs`?
-3. Is `/docs/index.json` valid JSON?
+**Documents not loading:**
+- Ensure local server is running (not file:// protocol)
+- Check browser console for fetch errors
+- Verify file paths in index.json match actual files
 
-### Search not working
+**Search not working:**
+- Clear browser cache and reload
+- Ensure documents are loaded at least once (indexes on load)
+- Check browser console for JavaScript errors
 
-**Check:**
-1. Browser console for JavaScript errors (`F12`)
-2. Are all .md files accessible?
-3. Is JSON index properly formatted?
+**Styles look wrong:**
+- Hard refresh browser (Ctrl+Shift+R or Cmd+Shift+R)
+- Clear localStorage: `localStorage.clear()` in console
+- Check CSS file path in index.html
 
-### Styling looks broken
+## 📝 Writing Documentation
 
-**Check:**
-1. CSS file path is correct
-2. Browser cache is cleared (`Ctrl+Shift+Delete`)
-3. No CSS syntax errors in console
+### Markdown Features Supported
 
-## 📝 License
+✅ Headings (H1-H6)  
+✅ Bold, italic, strikethrough  
+✅ Lists (ordered & unordered)  
+✅ Code blocks with syntax highlighting  
+✅ Inline code  
+✅ Tables  
+✅ Blockquotes  
+✅ Links and images  
+✅ Horizontal rules  
 
-This documentation site template is provided as-is for Eagleye Radar.
+### Code Block Syntax
 
-## 🤝 Contributing
+Use triple backticks with language identifier:
 
-To improve documentation:
+````markdown
+```javascript
+function hello() {
+  console.log("Syntax highlighting works!");
+}
+```
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/improvement`)
-3. Make changes to markdown files
-4. Commit changes (`git commit -am 'Add improvement'`)
-5. Push to branch (`git push origin feature/improvement`)
-6. Open Pull Request
+```bash
+npm install --save package-name
+```
+
+```json
+{
+  "key": "value"
+}
+```
+````
+
+## 📄 License
+
+This documentation template is provided as-is for use by Forensic CyberTech.
 
 ## 📞 Support
 
-For issues or questions:
-
-1. Check [Troubleshooting](docs/troubleshooting.md) guide
-2. Review [Getting Started](docs/getting-started.md)
-3. Check browser console for errors
-4. Contact support team
-
-## 🔄 Updates
-
-To update documentation:
-
-1. Edit markdown files in `/docs`
-2. Add new files to `/docs/index.json` if needed
-3. Commit and push changes
-4. Changes deploy automatically to GitHub Pages
-
-## 📈 Scaling
-
-This template scales to 100+ documentation pages:
-
-- Add entries to `index.json`
-- Create .md files in `/docs`
-- Search automatically indexes all files
-- No performance degradation
+For issues with the documentation system:
+1. Check the Troubleshooting section above
+2. Review browser console for error messages
+3. Verify index.json syntax is valid JSON
+4. Ensure all referenced .md files exist
 
 ---
 
-**Built for Enterprise** 🚀  
-**Enterprise-ready Documentation System for Eagleye Radar**
+**Last Updated:** February 2026  
+**Version:** 2.0 (Hierarchical Project Structure)
