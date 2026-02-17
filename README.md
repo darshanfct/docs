@@ -1,5 +1,9 @@
 # 🏢 Forensic CyberTech Documentations
 
+<div align="center">
+  <img src="https://forensiccybertech.com/wp-content/uploads/2025/05/Eagleye-logo-1.png" alt="EAGLEYE RADAR Logo" width="120" style="margin: 20px 0; filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.25));">
+</div>
+
 > **Enterprise-grade documentation platform for network security, monitoring, and operations infrastructure**
 
 ---

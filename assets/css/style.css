@@ -91,6 +91,20 @@ body {
     margin-bottom: 4px;
 }
 
+.logo-image {
+    height: 48px;
+    width: auto;
+    display: block;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.15));
+    transition: all 0.3s ease;
+}
+
+.logo-image:hover {
+    filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.25));
+    transform: scale(1.05);
+}
+
 .tagline {
     font-size: 11px;
     color: var(--color-text-tertiary);
