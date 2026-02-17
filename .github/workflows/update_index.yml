@@ -1,0 +1,37 @@
+name: Update Documentation Index
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - 'docs/**'  # Trigger only when docs change
+      - 'generate_index.py'
+
+jobs:
+  update-index:
+    runs-on: ubuntu-latest
+    # Grant write permission to push commits
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          
+      - name: Run generation script
+        run: |
+          python generate_index.py
+          
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto-update index.json [skip ci]"
+          file_pattern: 'docs/index.json'
+          branch: ${{ github.head_ref }}

@@ -401,26 +401,25 @@ Your Forensic CyberTech Documentation
 
 ### Documentation Management
 
-To ensure the documentation site remains static and compatible with GitHub Pages, we use a local Python script to generate the `index.json`.
+The documentation site is **fully automated**. You do NOT need to run any scripts manually.
 
 #### Adding New Content
 1. **Create Folders/Files**:
-   - Create project folders in `docs/` using the numbered prefix format (e.g., `02-project-name`).
+   - Create project folders in `docs/` using the numbered prefix format (e.g., `03-new-project`).
    - Add markdown files inside the project folder using the numbered prefix format (e.g., `01-introduction.md`).
 
-2. **Run Auto-Discovery**:
-   Execute the following command in the `docs/` directory to automatically update `index.json`:
-   ```bash
-   python generate_index.py
-   ```
-
-3. **Commit Changes**:
-   Commit the new files and the updated `index.json` to your repository.
+2. **Commit & Push**:
+   Simply push your changes to the `main` branch.
    ```bash
    git add .
-   git commit -m "docs: Add new project documentation"
+   git commit -m "docs: Add new project"
    git push origin main
    ```
+
+3. **Done!**
+   - GitHub Actions will automatically detect your changes.
+   - It will run the indexer and update `index.json`.
+   - The site will refresh within a few minutes.
 
 #### Directory Structure Example
 ```
@@ -430,8 +429,6 @@ docs/
 │   └── 02-troubleshooting.md
 ├── 02-new-project/
 │   └── 01-overview.md
-├── generate_index.py      (Run this script after changes)
-└── index.json             (Do not edit manually)
 ```
 
 ---
