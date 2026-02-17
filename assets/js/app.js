@@ -23,7 +23,7 @@ class DocApp {
         this.searchInput = document.getElementById('searchInput');
         this.breadcrumb = document.getElementById('breadcrumb');
         this.isMobile = window.innerWidth <= 768;
-        
+
         this.init();
     }
 
@@ -46,12 +46,12 @@ class DocApp {
             if (!response.ok) throw new Error('Failed to load index');
             const data = await response.json();
             this.projects = data.projects || [];
-            
+
             // Update site title
             if (data.site && this.logo) {
                 this.logo.textContent = data.site.title;
             }
-            
+
             this.renderSidebar();
         } catch (error) {
             console.error('Error loading doc index:', error);
@@ -61,69 +61,69 @@ class DocApp {
 
     renderSidebar() {
         this.sidebarNav.innerHTML = '';
-        
+
         this.projects.forEach((project) => {
             // Create project section
             const projectSection = document.createElement('div');
             projectSection.className = 'project-section';
-            
+
             // Project title
             const projectTitle = document.createElement('div');
             projectTitle.className = 'project-title';
             projectTitle.textContent = project.title;
             projectTitle.addEventListener('click', () => {
                 projectSection.classList.toggle('expanded');
-                localStorage.setItem(`project-${project.id}`, 
+                localStorage.setItem(`project-${project.id}`,
                     projectSection.classList.contains('expanded') ? 'true' : 'false');
             });
-            
+
             // Restore expanded state
             if (localStorage.getItem(`project-${project.id}`) === 'true') {
                 projectSection.classList.add('expanded');
             }
-            
+
             projectSection.appendChild(projectTitle);
-            
+
             // Project docs
             const docsList = document.createElement('div');
             docsList.className = 'project-docs';
-            
+
             if (project.docs && Array.isArray(project.docs)) {
                 project.docs.forEach((doc, index) => {
                     const docItem = document.createElement('div');
                     docItem.className = 'doc-item';
-                    
+
                     const link = document.createElement('a');
                     link.href = `#${btoa(doc.file)}`;
                     link.className = 'sidebar-link doc-link';
                     link.setAttribute('data-file', doc.file);
                     link.setAttribute('data-project', project.id);
-                    
+
                     const title = document.createElement('div');
                     title.className = 'doc-title';
                     title.textContent = doc.title;
-                    
+
                     const subtitle = document.createElement('div');
                     subtitle.className = 'doc-subtitle';
                     subtitle.textContent = doc.description || project.description;
-                    
+
                     link.appendChild(title);
                     link.appendChild(subtitle);
-                    
+
                     // Set first doc as active by default
                     if (index === 0 && !location.hash) {
                         docItem.classList.add('active');
                     }
-                    
+
                     link.addEventListener('click', (e) => {
                         this.closeMobileSidebar();
                     });
-                    
+
                     docItem.appendChild(link);
                     docsList.appendChild(docItem);
                 });
             }
-            
+
             projectSection.appendChild(docsList);
             this.sidebarNav.appendChild(projectSection);
         });
@@ -139,11 +139,11 @@ class DocApp {
     filterSidebar(query) {
         const links = this.sidebarNav.querySelectorAll('.doc-link');
         const projectSections = this.sidebarNav.querySelectorAll('.project-section');
-        
+
         projectSections.forEach(section => {
             let hasVisibleDocs = false;
             const docLinks = section.querySelectorAll('.doc-link');
-            
+
             docLinks.forEach(link => {
                 const title = link.textContent.toLowerCase();
                 if (query === '' || title.includes(query)) {
@@ -153,7 +153,7 @@ class DocApp {
                     link.style.display = 'none';
                 }
             });
-            
+
             section.style.display = hasVisibleDocs || query === '' ? 'block' : 'none';
         });
     }
@@ -161,7 +161,7 @@ class DocApp {
     handleRouting() {
         const hash = location.hash.substring(1);
         let docToLoad = null;
-        
+
         if (hash) {
             try {
                 // Decode base64 encoded filename
@@ -171,52 +171,89 @@ class DocApp {
                 docToLoad = hash;
             }
         }
-        
-        // Load first doc if no hash
-        if (!docToLoad && this.projects.length > 0 && this.projects[0].docs && this.projects[0].docs.length > 0) {
-            docToLoad = this.projects[0].docs[0].file;
-        }
-        
+
         if (docToLoad) {
             this.loadDoc(docToLoad);
             this.updateActiveLink(docToLoad);
+        } else {
+            // Load Home Page (README.md)
+            this.loadHome();
+            this.updateActiveLink('home');
+        }
+    }
+
+    async loadHome() {
+        try {
+            this.docContent.innerHTML = '<div class="loading-message"><div class="loading-spinner"></div><p>Loading Home...</p></div>';
+
+            // Adjust path to point to root README.md
+            const response = await fetch('README.md');
+            if (!response.ok) throw new Error('Failed to load home page');
+
+            const buffer = await response.arrayBuffer();
+            const decoder = new TextDecoder('utf-8');
+            const text = decoder.decode(buffer);
+            this.currentDoc = 'home';
+
+            // Render markdown
+            const html = marked.parse(text);
+            this.docContent.innerHTML = html;
+
+            // Scroll to top
+            document.querySelector('.content').scrollTop = 0;
+
+            // Apply syntax highlighting
+            Prism.highlightAllUnder(this.docContent);
+
+            // Generate TOC (optional for home, maybe skip?)
+            generateTableOfContents();
+
+            // Add copy buttons
+            addCopyButtons();
+
+            // Update breadcrumb
+            this.breadcrumb.innerHTML = `<span>Home</span>`;
+
+        } catch (error) {
+            console.error('Error loading home:', error);
+            this.showError('Failed to load home page');
         }
     }
 
     async loadDoc(filename) {
         try {
             this.docContent.innerHTML = '<div class="loading-message"><div class="loading-spinner"></div><p>Loading...</p></div>';
-            
+
             const response = await fetch(`docs/${filename}`);
             if (!response.ok) throw new Error(`Failed to load ${filename}`);
-            
+
             const buffer = await response.arrayBuffer();
             const decoder = new TextDecoder('utf-8');
             const text = decoder.decode(buffer);
             this.currentDoc = filename;
-            
+
             // Render markdown
             const html = marked.parse(text);
             this.docContent.innerHTML = html;
-            
+
             // Scroll to top
             document.querySelector('.content').scrollTop = 0;
-            
+
             // Apply syntax highlighting
             Prism.highlightAllUnder(this.docContent);
-            
+
             // Generate TOC
             generateTableOfContents();
-            
+
             // Add copy buttons
             addCopyButtons();
-            
+
             // Update breadcrumb
             this.updateBreadcrumb(filename);
-            
+
             // Setup heading anchors
             this.setupHeadingAnchors();
-            
+
         } catch (error) {
             console.error('Error loading doc:', error);
             this.docContent.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--color-text-tertiary);">
@@ -238,7 +275,7 @@ class DocApp {
     updateBreadcrumb(filename) {
         let title = filename;
         let project = null;
-        
+
         // Find the document and project
         for (const proj of this.projects) {
             if (proj.docs) {
@@ -250,7 +287,7 @@ class DocApp {
                 }
             }
         }
-        
+
         const projectName = project ? project.title : 'Documentation';
         const homeLink = this.projects.length > 0 ? this.projects[0].title : 'Documentation';
         this.breadcrumb.innerHTML = `
@@ -268,7 +305,7 @@ class DocApp {
             if (!heading.id) {
                 heading.id = this.slugify(heading.textContent);
             }
-            
+
             // Add anchor link icon
             const link = document.createElement('a');
             link.className = 'heading-anchor';
@@ -281,7 +318,7 @@ class DocApp {
                     window.location.href.split('#')[0] + '#' + heading.id
                 );
             });
-            
+
             heading.appendChild(link);
         });
     }
@@ -348,7 +385,7 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
         document.getElementById('searchInput').focus();
     }
-    
+
     // Escape to close search
     if (e.key === 'Escape') {
         document.getElementById('searchInput').blur();
