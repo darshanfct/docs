@@ -206,13 +206,17 @@ class DocApp {
             Prism.highlightAllUnder(this.docContent);
 
             // Generate TOC (optional for home, maybe skip?)
-            generateTableOfContents();
+            // generateTableOfContents(); // Skip TOC for home
+            document.getElementById('toc-container').innerHTML = ''; // Clear TOC
 
             // Add copy buttons
             addCopyButtons();
 
             // Update breadcrumb
             this.breadcrumb.innerHTML = `<span>Home</span>`;
+
+            // Add home-page class for styling (hide sidebar)
+            document.body.classList.add('home-page');
 
         } catch (error) {
             console.error('Error loading home:', error);
@@ -221,6 +225,9 @@ class DocApp {
     }
 
     async loadDoc(filename) {
+        // Remove home-page class
+        document.body.classList.remove('home-page');
+
         try {
             this.docContent.innerHTML = '<div class="loading-message"><div class="loading-spinner"></div><p>Loading...</p></div>';
 
