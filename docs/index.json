@@ -22,6 +22,25 @@
           "id": "02-troubleshooting"
         }
       ]
+    },
+    {
+      "id": "02-eagleye-radar",
+      "title": "Eagleye Radar",
+      "description": "",
+      "docs": [
+        {
+          "title": "Introduction",
+          "description": "",
+          "file": "02-eagleye-radar/01-introduction.md",
+          "id": "01-introduction"
+        },
+        {
+          "title": "Troubleshooting",
+          "description": "",
+          "file": "02-eagleye-radar/02-troubleshooting.md",
+          "id": "02-troubleshooting"
+        }
+      ]
     }
   ]
 }
