@@ -3,6 +3,17 @@
    Handles routing, sidebar generation, and doc loading
    ============================================ */
 
+// Configure marked for proper markdown rendering
+if (typeof marked !== 'undefined') {
+    marked.setOptions({
+        breaks: true,
+        gfm: true,
+        pedantic: false,
+        smartLists: true,
+        smartypants: true
+    });
+}
+
 class DocApp {
     constructor() {
         this.projects = [];
@@ -11,7 +22,6 @@ class DocApp {
         this.docContent = document.getElementById('docContent');
         this.searchInput = document.getElementById('searchInput');
         this.breadcrumb = document.getElementById('breadcrumb');
-        this.logo = document.querySelector('.logo');
         this.isMobile = window.innerWidth <= 768;
         
         this.init();
@@ -80,23 +90,37 @@ class DocApp {
             
             if (project.docs && Array.isArray(project.docs)) {
                 project.docs.forEach((doc, index) => {
+                    const docItem = document.createElement('div');
+                    docItem.className = 'doc-item';
+                    
                     const link = document.createElement('a');
                     link.href = `#${btoa(doc.file)}`;
-                    link.textContent = doc.title;
                     link.className = 'sidebar-link doc-link';
                     link.setAttribute('data-file', doc.file);
                     link.setAttribute('data-project', project.id);
                     
+                    const title = document.createElement('div');
+                    title.className = 'doc-title';
+                    title.textContent = doc.title;
+                    
+                    const subtitle = document.createElement('div');
+                    subtitle.className = 'doc-subtitle';
+                    subtitle.textContent = doc.description || project.description;
+                    
+                    link.appendChild(title);
+                    link.appendChild(subtitle);
+                    
                     // Set first doc as active by default
                     if (index === 0 && !location.hash) {
-                        link.classList.add('active');
+                        docItem.classList.add('active');
                     }
                     
                     link.addEventListener('click', (e) => {
                         this.closeMobileSidebar();
                     });
                     
-                    docsList.appendChild(link);
+                    docItem.appendChild(link);
+                    docsList.appendChild(docItem);
                 });
             }
             
@@ -226,8 +250,9 @@ class DocApp {
         }
         
         const projectName = project ? project.title : 'Documentation';
+        const homeLink = this.projects.length > 0 ? this.projects[0].title : 'Documentation';
         this.breadcrumb.innerHTML = `
-            <span><a href="#">${document.querySelector('.logo').textContent}</a></span>
+            <span><a href="#">${homeLink}</a></span>
             <span>/</span>
             <span>${projectName}</span>
             <span>/</span>

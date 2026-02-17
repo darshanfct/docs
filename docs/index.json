@@ -11,6 +11,7 @@
       "docs": [
         {
           "title": "Complete Documentation",
+          "description": "Overview, Quick Start, Installation, Configuration, Usage, Architecture, Troubleshooting, API Reference",
           "file": "P1.EAGLEYE RADAR/README.md",
           "id": "documentation"
         }
