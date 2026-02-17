@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page Not Found</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #030B1C 0%, #071A3A 100%);
+            color: #E5E7EB;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .code {
+            font-size: 120px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #9CA3AF;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        a {
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 300ms ease-out;
+        }
+
+        .primary {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+        }
+
+        .primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .secondary {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #E5E7EB;
+        }
+
+        .secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #3B82F6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="code">404</div>
+        <h1>Page Not Found</h1>
+        <p>The page you're looking for doesn't exist. It may have been moved, deleted, or the URL might be incorrect.</p>
+        <div class="actions">
+            <a href="/" class="primary">Go to Home</a>
+            <a href="/#getting-started.md" class="secondary">View Documentation</a>
+        </div>
+    </div>
+</body>
+</html>

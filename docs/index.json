@@ -1,0 +1,39 @@
+{
+  "docs": [
+    {
+      "title": "Getting Started",
+      "file": "getting-started.md",
+      "category": "Introduction"
+    },
+    {
+      "title": "Installation Guide",
+      "file": "installation.md",
+      "category": "Setup"
+    },
+    {
+      "title": "Radar Scanner",
+      "file": "radar-scanner.md",
+      "category": "Projects"
+    },
+    {
+      "title": "Network Engine",
+      "file": "network-engine.md",
+      "category": "Projects"
+    },
+    {
+      "title": "Configuration",
+      "file": "configuration.md",
+      "category": "Setup"
+    },
+    {
+      "title": "API Reference",
+      "file": "api-reference.md",
+      "category": "Development"
+    },
+    {
+      "title": "Troubleshooting",
+      "file": "troubleshooting.md",
+      "category": "Support"
+    }
+  ]
+}
