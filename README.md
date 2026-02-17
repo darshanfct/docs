@@ -399,37 +399,40 @@ Your Forensic CyberTech Documentation
         └─ search.js          (Full-text search)
 ```
 
-### Adding New Projects
+### Documentation Management
 
-To add a new project (e.g., "P2.Your Project"):
+To ensure the documentation site remains static and compatible with GitHub Pages, we use a local Python script to generate the `index.json`.
 
-1. **Create project folder** in `/docs/`
+#### Adding New Content
+1. **Create Folders/Files**:
+   - Create project folders in `docs/` using the numbered prefix format (e.g., `02-project-name`).
+   - Add markdown files inside the project folder using the numbered prefix format (e.g., `01-introduction.md`).
+
+2. **Run Auto-Discovery**:
+   Execute the following command in the `docs/` directory to automatically update `index.json`:
    ```bash
-   mkdir -p "docs/P2.Your Project"
+   python generate_index.py
    ```
 
-2. **Add README.md** with your documentation
+3. **Commit Changes**:
+   Commit the new files and the updated `index.json` to your repository.
    ```bash
-   cp template-README.md "docs/P2.Your Project/README.md"
+   git add .
+   git commit -m "docs: Add new project documentation"
+   git push origin main
    ```
 
-3. **Update /docs/index.json**
-   ```json
-   {
-     "id": "P2.Your Project",
-     "title": "📋 Your Project",
-     "description": "Project description",
-     "docs": [
-       {
-         "title": "Complete Documentation",
-         "file": "P2.Your Project/README.md",
-         "id": "documentation"
-       }
-     ]
-   }
-   ```
-
-4. **Refresh browser** - New project appears in sidebar
+#### Directory Structure Example
+```
+docs/
+├── 01-eagleye-radar/
+│   ├── 01-introduction.md
+│   └── 02-troubleshooting.md
+├── 02-new-project/
+│   └── 01-overview.md
+├── generate_index.py      (Run this script after changes)
+└── index.json             (Do not edit manually)
+```
 
 ---
 

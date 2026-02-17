@@ -190,7 +190,9 @@ class DocApp {
             const response = await fetch(`docs/${filename}`);
             if (!response.ok) throw new Error(`Failed to load ${filename}`);
             
-            const text = await response.text();
+            const buffer = await response.arrayBuffer();
+            const decoder = new TextDecoder('utf-8');
+            const text = decoder.decode(buffer);
             this.currentDoc = filename;
             
             // Render markdown
