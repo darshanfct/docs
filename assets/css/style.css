@@ -145,6 +145,60 @@ body {
     padding: 8px 0;
 }
 
+/* Project Section Styles */
+.project-section {
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--color-border-light);
+    last-of-type: {
+        border-bottom: none;
+    }
+}
+
+.project-title {
+    padding: 12px 16px;
+    color: var(--color-primary-light);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all var(--transition-fast);
+}
+
+.project-title::after {
+    content: '▼';
+    font-size: 10px;
+    transition: transform var(--transition-fast);
+}
+
+.project-title:hover {
+    color: var(--color-primary);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.project-section.expanded .project-title::after {
+    transform: rotate(180deg);
+}
+
+/* Project Docs Container */
+.project-docs {
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height var(--transition-normal), opacity var(--transition-normal);
+    opacity: 1;
+}
+
+.project-section:not(.expanded) .project-docs {
+    max-height: 0;
+    opacity: 0;
+    display: none;
+}
+
+/* Sidebar Links */
 .sidebar-nav a {
     display: block;
     padding: 10px 16px;
@@ -155,6 +209,13 @@ body {
     border-radius: 6px;
     transition: all var(--transition-fast);
     position: relative;
+}
+
+.sidebar-nav a.doc-link {
+    padding: 8px 16px;
+    margin: 2px 8px;
+    color: var(--color-text-secondary);
+    font-size: 12px;
 }
 
 .sidebar-nav a:hover {

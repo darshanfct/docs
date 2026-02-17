@@ -34,9 +34,15 @@ function generateTableOfContents() {
             link.className = 'toc-h3';
         }
         
-        // Add click handler to highlight
-        link.addEventListener('click', () => {
-            updateTocActive(link);
+        // Prevent navigation - just scroll
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                updateTocActive(link);
+            }
         });
         
         tocContent.appendChild(link);

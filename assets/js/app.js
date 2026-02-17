@@ -5,12 +5,13 @@
 
 class DocApp {
     constructor() {
-        this.docs = [];
+        this.projects = [];
         this.currentDoc = null;
         this.sidebarNav = document.getElementById('sidebarNav');
         this.docContent = document.getElementById('docContent');
         this.searchInput = document.getElementById('searchInput');
         this.breadcrumb = document.getElementById('breadcrumb');
+        this.logo = document.querySelector('.logo');
         this.isMobile = window.innerWidth <= 768;
         
         this.init();
@@ -34,7 +35,13 @@ class DocApp {
             const response = await fetch('docs/index.json');
             if (!response.ok) throw new Error('Failed to load index');
             const data = await response.json();
-            this.docs = data.docs || [];
+            this.projects = data.projects || [];
+            
+            // Update site title
+            if (data.site && this.logo) {
+                this.logo.textContent = data.site.title;
+            }
+            
             this.renderSidebar();
         } catch (error) {
             console.error('Error loading doc index:', error);
@@ -45,23 +52,56 @@ class DocApp {
     renderSidebar() {
         this.sidebarNav.innerHTML = '';
         
-        this.docs.forEach((doc, index) => {
-            const link = document.createElement('a');
-            link.href = `#${doc.file}`;
-            link.textContent = doc.title;
-            link.className = 'sidebar-link';
-            link.setAttribute('data-file', doc.file);
+        this.projects.forEach((project) => {
+            // Create project section
+            const projectSection = document.createElement('div');
+            projectSection.className = 'project-section';
             
-            // Set first doc as active by default
-            if (index === 0 && !location.hash) {
-                link.classList.add('active');
-            }
-            
-            link.addEventListener('click', (e) => {
-                this.closeMobileSidebar();
+            // Project title
+            const projectTitle = document.createElement('div');
+            projectTitle.className = 'project-title';
+            projectTitle.textContent = project.title;
+            projectTitle.addEventListener('click', () => {
+                projectSection.classList.toggle('expanded');
+                localStorage.setItem(`project-${project.id}`, 
+                    projectSection.classList.contains('expanded') ? 'true' : 'false');
             });
             
-            this.sidebarNav.appendChild(link);
+            // Restore expanded state
+            if (localStorage.getItem(`project-${project.id}`) === 'true') {
+                projectSection.classList.add('expanded');
+            }
+            
+            projectSection.appendChild(projectTitle);
+            
+            // Project docs
+            const docsList = document.createElement('div');
+            docsList.className = 'project-docs';
+            
+            if (project.docs && Array.isArray(project.docs)) {
+                project.docs.forEach((doc, index) => {
+                    const link = document.createElement('a');
+                    link.href = `#${btoa(doc.file)}`;
+                    link.textContent = doc.title;
+                    link.className = 'sidebar-link doc-link';
+                    link.setAttribute('data-file', doc.file);
+                    link.setAttribute('data-project', project.id);
+                    
+                    // Set first doc as active by default
+                    if (index === 0 && !location.hash) {
+                        link.classList.add('active');
+                    }
+                    
+                    link.addEventListener('click', (e) => {
+                        this.closeMobileSidebar();
+                    });
+                    
+                    docsList.appendChild(link);
+                });
+            }
+            
+            projectSection.appendChild(docsList);
+            this.sidebarNav.appendChild(projectSection);
         });
     }
 
@@ -73,20 +113,45 @@ class DocApp {
     }
 
     filterSidebar(query) {
-        const links = this.sidebarNav.querySelectorAll('a');
-        links.forEach(link => {
-            const title = link.textContent.toLowerCase();
-            if (query === '' || title.includes(query)) {
-                link.style.display = 'block';
-            } else {
-                link.style.display = 'none';
-            }
+        const links = this.sidebarNav.querySelectorAll('.doc-link');
+        const projectSections = this.sidebarNav.querySelectorAll('.project-section');
+        
+        projectSections.forEach(section => {
+            let hasVisibleDocs = false;
+            const docLinks = section.querySelectorAll('.doc-link');
+            
+            docLinks.forEach(link => {
+                const title = link.textContent.toLowerCase();
+                if (query === '' || title.includes(query)) {
+                    link.style.display = 'block';
+                    hasVisibleDocs = true;
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+            
+            section.style.display = hasVisibleDocs || query === '' ? 'block' : 'none';
         });
     }
 
     handleRouting() {
         const hash = location.hash.substring(1);
-        const docToLoad = hash || (this.docs.length > 0 ? this.docs[0].file : null);
+        let docToLoad = null;
+        
+        if (hash) {
+            try {
+                // Decode base64 encoded filename
+                docToLoad = atob(hash);
+            } catch (e) {
+                // If not base64, use as is
+                docToLoad = hash;
+            }
+        }
+        
+        // Load first doc if no hash
+        if (!docToLoad && this.projects.length > 0 && this.projects[0].docs && this.projects[0].docs.length > 0) {
+            docToLoad = this.projects[0].docs[0].file;
+        }
         
         if (docToLoad) {
             this.loadDoc(docToLoad);
@@ -136,7 +201,7 @@ class DocApp {
     }
 
     updateActiveLink(filename) {
-        document.querySelectorAll('.sidebar-link').forEach(link => {
+        document.querySelectorAll('.doc-link').forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('data-file') === filename) {
                 link.classList.add('active');
@@ -145,11 +210,26 @@ class DocApp {
     }
 
     updateBreadcrumb(filename) {
-        const doc = this.docs.find(d => d.file === filename);
-        const title = doc ? doc.title : filename;
+        let title = filename;
+        let project = null;
         
+        // Find the document and project
+        for (const proj of this.projects) {
+            if (proj.docs) {
+                const doc = proj.docs.find(d => d.file === filename);
+                if (doc) {
+                    title = doc.title;
+                    project = proj;
+                    break;
+                }
+            }
+        }
+        
+        const projectName = project ? project.title : 'Documentation';
         this.breadcrumb.innerHTML = `
-            <span><a href="#${this.docs[0].file}">Docs</a></span>
+            <span><a href="#">${document.querySelector('.logo').textContent}</a></span>
+            <span>/</span>
+            <span>${projectName}</span>
             <span>/</span>
             <span>${title}</span>
         `;
