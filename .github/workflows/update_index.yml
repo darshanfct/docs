@@ -5,7 +5,7 @@ on:
     branches: [ "main", "master" ]
     paths:
       - 'docs/**'  # Trigger only when docs change
-      - 'generate_index.py'
+      - '.github/scripts/generate_index.py'
 
 jobs:
   update-index:
@@ -27,7 +27,7 @@ jobs:
           
       - name: Run generation script
         run: |
-          python generate_index.py
+          python .github/scripts/generate_index.py
           
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
